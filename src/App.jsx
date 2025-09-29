@@ -1,30 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import { Outlet, useLocation } from "react-router-dom";
-import homeBg from "/assets/home/background-home-mobile.jpg";
 
-function App() {
+const backgrounds = {
+  "": {
+    mobile: "/assets/home/background-home-mobile.jpg",
+    tablet: "/assets/home/background-home-tablet.jpg",
+    desktop: "/assets/home/background-home-desktop.jpg",
+  },
+  home: {
+    mobile: "/assets/home/background-home-mobile.jpg",
+    tablet: "/assets/home/background-home-tablet.jpg",
+    desktop: "/assets/home/background-home-desktop.jpg",
+  },
+  destination: {
+    mobile: "/assets/destination/background-destination-mobile.jpg",
+    tablet: "/assets/destination/background-destination-tablet.jpg",
+    desktop: "/assets/destination/background-destination-desktop.jpg",
+  },
+  crew: {
+    mobile: "/assets/crew/background-crew-mobile.jpg",
+    tablet: "/assets/crew/background-crew-tablet.jpg",
+    desktop: "/assets/crew/background-crew-desktop.jpg",
+  },
+  technology: {
+    mobile: "/assets/technology/background-technology-mobile.jpg",
+    tablet: "/assets/technology/background-technology-tablet.jpg",
+    desktop: "/assets/technology/background-technology-desktop.jpg",
+  },
+};
+
+export default function App() {
   const location = useLocation();
+  const basePath = location.pathname.split("/")[1] || "";
+  const [loaded, setLoaded] = useState(false);
+  const [currentBg, setCurrentBg] = useState(backgrounds[basePath]);
 
-  const backgroundsMap = {
-    "": "bg-[url('/assets/home/background-home-mobile.jpg')] sm:bg-[url('/assets/home/background-home-tablet.jpg')] lg:bg-[url('/assets/home/background-home-desktop.jpg')]",
-    home: "bg-[url('/assets/home/background-home-mobile.jpg')] sm:bg-[url('/assets/home/background-home-tablet.jpg')] lg:bg-[url('/assets/home/background-home-desktop.jpg')]",
-    destination:
-      "bg-[url('/assets/destination/background-destination-mobile.jpg')] sm:bg-[url('/assets/destination/background-destination-tablet.jpg')] lg:bg-[url('/assets/destination/background-destination-desktop.jpg')]",
-    crew: "bg-[url('/assets/crew/background-crew-mobile.jpg')] sm:bg-[url('/assets/crew/background-crew-tablet.jpg')] lg:bg-[url('/assets/crew/background-crew-desktop.jpg')]",
-    technology:
-      "bg-[url('/assets/technology/background-technology-mobile.jpg')] sm:bg-[url('/assets/technology/background-technology-tablet.jpg')] lg:bg-[url('/assets/technology/background-technology-desktop.jpg')]",
-  };
+  useEffect(() => {
+    const bgSet = backgrounds[basePath] || backgrounds[""];
+    const images = Object.values(bgSet).map((src) => {
+      const img = new Image();
+      img.src = src;
+      return img;
+    });
 
-  const basePath = location.pathname.split("/")[1];
-  const currentBg = backgroundsMap[basePath] || homeBg;
+    let loadedCount = 0;
+    images.forEach((img) => {
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === images.length) {
+          setCurrentBg(bgSet);
+          setLoaded(true);
+        }
+      };
+    });
+  }, [basePath]);
+
+  if (!loaded) return null; // avoid flicker
 
   return (
-    <div className={`min-h-screen bg-cover text-white ${currentBg}`}>
+    <div
+      className={`min-h-screen bg-cover text-white`}
+      style={{
+        backgroundImage: `url(${currentBg.mobile})`,
+      }}
+    >
       <Header />
       <Outlet />
     </div>
   );
 }
-
-export default App;
