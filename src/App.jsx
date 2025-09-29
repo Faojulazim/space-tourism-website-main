@@ -62,6 +62,7 @@ export default function App() {
     <div
       className={`min-h-screen bg-cover text-white`}
       style={{
+        backgroundSize: "cover",
         backgroundImage: `url(${currentBg.mobile})`,
       }}
     >
