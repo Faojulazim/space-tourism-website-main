@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import Header from "./components/Header";
 
-// Background images for each route
 const backgrounds = {
   home: {
     mobile: "/assets/home/background-home-mobile.jpg",
@@ -31,8 +30,6 @@ export default function App() {
   const basePath = location.pathname.split("/")[1] || "home";
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentBg, setCurrentBg] = useState("");
-  const [prevBg, setPrevBg] = useState("");
-  const [loaded, setLoaded] = useState(false);
 
   // Track window resize
   useEffect(() => {
@@ -41,7 +38,7 @@ export default function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Load background based on route + screen width
+  // Set current background based on route + screen width
   useEffect(() => {
     const bgSet = backgrounds[basePath] || backgrounds.home;
 
@@ -53,36 +50,16 @@ export default function App() {
     // Preload image
     const img = new Image();
     img.src = bgSrc;
-    img.onload = () => {
-      setPrevBg(currentBg);
-      setCurrentBg(bgSrc);
-      setLoaded(true);
-    };
+    img.onload = () => setCurrentBg(bgSrc);
   }, [basePath, screenWidth]);
 
-  if (!loaded) return null;
-
   return (
-    <div className="relative min-h-screen text-white overflow-hidden">
-      {/* Backgrounds as normal flowing divs */}
-      <div className="w-full relative">
-        {prevBg && prevBg !== currentBg && (
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700"
-            style={{ backgroundImage: `url(${prevBg})`, opacity: 0 }}
-          ></div>
-        )}
-        <div
-          className="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
-          style={{ backgroundImage: `url(${currentBg})` }}
-        ></div>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10">
-        <Header />
-        <Outlet />
-      </div>
+    <div
+      className="min-h-screen text-white bg-cover bg-center"
+      style={{ backgroundImage: currentBg ? `url(${currentBg})` : "none" }}
+    >
+      <Header />
+      <Outlet />
     </div>
   );
 }
