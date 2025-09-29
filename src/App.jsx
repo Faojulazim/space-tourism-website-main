@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import Header from "./components/Header";
 
+// Background images for each route
 const backgrounds = {
   home: {
     mobile: "/assets/home/background-home-mobile.jpg",
@@ -49,11 +50,11 @@ export default function App() {
     else if (screenWidth >= 640) bgSrc = bgSet.tablet;
     else bgSrc = bgSet.mobile;
 
-    // preload image
+    // Preload image
     const img = new Image();
     img.src = bgSrc;
     img.onload = () => {
-      setPrevBg(currentBg); // keep previous for fade
+      setPrevBg(currentBg);
       setCurrentBg(bgSrc);
       setLoaded(true);
     };
@@ -63,16 +64,16 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
-      {/* Backgrounds */}
-      <div className="fixed inset-0 z-0">
+      {/* Backgrounds as normal flowing divs */}
+      <div className="w-full relative">
         {prevBg && prevBg !== currentBg && (
           <div
-            className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
+            className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700"
             style={{ backgroundImage: `url(${prevBg})`, opacity: 0 }}
           ></div>
         )}
         <div
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-700 opacity-100"
+          className="w-full h-full bg-cover bg-center transition-opacity duration-700 opacity-100"
           style={{ backgroundImage: `url(${currentBg})` }}
         ></div>
       </div>
