@@ -31,23 +31,18 @@ export default function App() {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentBg, setCurrentBg] = useState("");
 
-  // Track window resize
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Set current background based on route + screen width
   useEffect(() => {
     const bgSet = backgrounds[basePath] || backgrounds.home;
-
     let bgSrc;
     if (screenWidth >= 1024) bgSrc = bgSet.desktop;
     else if (screenWidth >= 640) bgSrc = bgSet.tablet;
     else bgSrc = bgSet.mobile;
-
-    // Preload image
     const img = new Image();
     img.src = bgSrc;
     img.onload = () => setCurrentBg(bgSrc);
