@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
+import { useLocation, Outlet } from "react-router-dom";
 import Header from "./components/Header";
-import { Outlet, useLocation } from "react-router-dom";
 
 const backgrounds = {
-  "": {
-    mobile: "/assets/home/background-home-mobile.jpg",
-    tablet: "/assets/home/background-home-tablet.jpg",
-    desktop: "/assets/home/background-home-desktop.jpg",
-  },
   home: {
     mobile: "/assets/home/background-home-mobile.jpg",
     tablet: "/assets/home/background-home-tablet.jpg",
@@ -32,43 +27,61 @@ const backgrounds = {
 
 export default function App() {
   const location = useLocation();
-  const basePath = location.pathname.split("/")[1] || "";
+  const basePath = location.pathname.split("/")[1] || "home";
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [currentBg, setCurrentBg] = useState("");
+  const [prevBg, setPrevBg] = useState(""); // for smooth fade
   const [loaded, setLoaded] = useState(false);
-  const [currentBg, setCurrentBg] = useState(backgrounds[basePath]);
-  console.log("s");
 
+  // Track window resize
   useEffect(() => {
-    const bgSet = backgrounds[basePath] || backgrounds[""];
-    const images = Object.values(bgSet).map((src) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    let loadedCount = 0;
-    images.forEach((img) => {
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === images.length) {
-          setCurrentBg(bgSet);
-          setLoaded(true);
-        }
-      };
-    });
-  }, [basePath]);
+  // Load background based on route + screen width
+  useEffect(() => {
+    const bgSet = backgrounds[basePath] || backgrounds.home;
 
-  if (!loaded) return null; // avoid flicker
+    let bgSrc;
+    if (screenWidth >= 1024) bgSrc = bgSet.desktop;
+    else if (screenWidth >= 640) bgSrc = bgSet.tablet;
+    else bgSrc = bgSet.mobile;
+
+    // preload image
+    const img = new Image();
+    img.src = bgSrc;
+    img.onload = () => {
+      setPrevBg(currentBg); // keep previous for fade
+      setCurrentBg(bgSrc);
+      setLoaded(true);
+    };
+  }, [basePath, screenWidth]);
+
+  if (!loaded) return null;
 
   return (
-    <div
-      className={`min-h-screen bg-cover text-white`}
-      style={{
-        backgroundSize: "cover",
-        backgroundImage: `url(${currentBg.mobile})`,
-      }}
-    >
-      <Header />
-      <Outlet />
+    <div className="relative min-h-screen text-white overflow-hidden">
+      {/* Backgrounds */}
+      <div className="fixed inset-0 z-0">
+        {prevBg && prevBg !== currentBg && (
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
+            style={{ backgroundImage: `url(${prevBg})`, opacity: 0 }}
+          ></div>
+        )}
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-700 opacity-100"
+          style={{ backgroundImage: `url(${currentBg})` }}
+        ></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">
+        <Header />
+        <Outlet />
+      </div>
     </div>
   );
 }
