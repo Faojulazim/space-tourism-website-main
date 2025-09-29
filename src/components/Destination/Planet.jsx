@@ -10,13 +10,11 @@ function Moon() {
   );
   const planetNames = data?.map((items) => items.name);
 
-  if (!planetData)
-    return (
-      <div className="fixed inset-0 bg-white text-black font-Barlow text-xl flex items-center justify-center w-full">
-        <p className="text-center">No data available for "{planet}"</p>
-      </div>
-    );
-  return (
+  return !planetData ? (
+    <div className="fixed inset-0 bg-white text-black font-Barlow text-xl flex items-center justify-center w-full">
+      <p className="text-center">No data available for "{planet}"</p>
+    </div>
+  ) : (
     <div className="mt-10 w-full 1200:mt-24 1440:mt-30 flex flex-col items-center justify-center md:max-w-[600px] md:mx-auto 1200:flex-row 1200:!max-w-[1200px] 1200:gap-x-20 ">
       <img
         className="px-25 1200:px-0 !w-full max-w-[600px]  1200:!max-w-[650px] 1200:!w-[650px]"

@@ -30,7 +30,7 @@ export default function App() {
   const basePath = location.pathname.split("/")[1] || "home";
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentBg, setCurrentBg] = useState("");
-  const [prevBg, setPrevBg] = useState(""); // for smooth fade
+  const [prevBg, setPrevBg] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   // Track window resize
