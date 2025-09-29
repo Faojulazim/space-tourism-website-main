@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Bellefair&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-Barlow: "Barlow", sans-serif;
+  --font-BCondensed: "Barlow Condensed", sans-serif;
+  --font-Bellefair: "Bellefair", serif;
+  /* Breakpoints */
+  --breakpoint-375: 375px;
+  --breakpoint-425: 425px;
+  --breakpoint-500: 500px;
+  --breakpoint-550: 550px;
+  --breakpoint-600: 600px;
+  --breakpoint-650: 650px;
+  --breakpoint-700: 700px;
+  --breakpoint-750: 750px;
+  --breakpoint-800: 800px;
+  --breakpoint-850: 850px;
+  --breakpoint-900: 900px;
+  --breakpoint-950: 950px;
+  --breakpoint-1000: 1000px;
+  --breakpoint-1100: 1100px;
+  --breakpoint-1150: 1150px;
+  --breakpoint-1200: 1200px;
+  --breakpoint-1300: 1300px;
+  --breakpoint-1350: 1350px;
+  --breakpoint-1440: 1440px;
+  --breakpoint-1550: 1550px;
+  --breakpoint-1660: 1660px;
+  --breakpoint-1770: 1770px;
+  --breakpoint-1900: 1900px;
+  /* Colors */
+  --color-Blue300: hsl(231, 77%, 90%);
+  --color-Blue900: hsl(230, 35%, 7%);
+}
