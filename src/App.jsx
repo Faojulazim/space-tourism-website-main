@@ -35,6 +35,7 @@ export default function App() {
   const basePath = location.pathname.split("/")[1] || "";
   const [loaded, setLoaded] = useState(false);
   const [currentBg, setCurrentBg] = useState(backgrounds[basePath]);
+  console.log("s");
 
   useEffect(() => {
     const bgSet = backgrounds[basePath] || backgrounds[""];
